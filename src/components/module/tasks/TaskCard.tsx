@@ -5,6 +5,7 @@ import { deleteTask, toggleCompleteState } from "@/redux/features/task/taskSlice
 import { useAppDispatch } from "@/redux/hook";
 import type { ITask } from "@/type";
 import { Trash2 } from "lucide-react";
+import { UpdateTaskModal } from "./UpdateTaskModal";
 
 interface IProps {
     task: ITask;
@@ -29,10 +30,12 @@ const TaskCard = ({ task }: IProps) => {
                 </div>
 
                 <div className="flex gap-3 items-center">
+                    <UpdateTaskModal id={task.id}/>
+
                     <Button
                         onClick={() => dispatch(deleteTask(task.id))}
                         variant={"link"} className="p-0 text-red-500">
-                        <Trash2 />
+                        <Trash2  className="size-6" />
                     </Button>
 
                     <Checkbox

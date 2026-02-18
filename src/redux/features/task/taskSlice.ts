@@ -26,6 +26,7 @@ const initialState: InitialState = {
 
 // better approach
 type DraftTask = Pick<ITask, "title" | "description" | "dueDate" | "priority">;
+type DraftTaskForUpdate = Pick<ITask, "id" | "title" | "description" | "dueDate" | "priority">;
 
 const createTask = (taskData: DraftTask): ITask => {
     return { id: nanoid(), isCompleted: false, ...taskData };
@@ -49,6 +50,20 @@ const taskSlice = createSlice({
 
         deleteTask: (state, action: PayloadAction<string>) => {
             state.tasks = state.tasks.filter(task => task.id !== action.payload);
+        },
+
+        updateTask: (state, action: PayloadAction<DraftTaskForUpdate>) => {
+            console.log("From updateTask ==> ", action.payload);
+            state.tasks.forEach((task) =>
+                task.id === action.payload.id ?
+                    (
+                        task.title = action.payload.title,
+                        task.description = action.payload.description,
+                        task.dueDate = action.payload.dueDate,
+                        task.priority = action.payload.priority
+                    )
+                    : task
+            );
         }
     }
 })
@@ -58,12 +73,16 @@ export const selectTasks = (state: RootState) => {
     return state.todo.tasks;
 }
 
+export const selectSingleTasks = (state: RootState, id: string) => {
+    return state.todo.tasks.find(task => task.id === id);
+}
+
 export const selectFilter = (state: RootState) => {
     return state.todo.filter;
 }
 
 
-export const { addTask, toggleCompleteState, deleteTask } = taskSlice.actions;
+export const { addTask, toggleCompleteState, deleteTask, updateTask } = taskSlice.actions;
 
 
 export default taskSlice.reducer;
