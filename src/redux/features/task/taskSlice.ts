@@ -18,6 +18,7 @@ const initialState: InitialState = {
             dueDate: '18-02-2026',
             isCompleted: false,
             priority: 'High',
+            "assign-to": '001'
         }
     ],
     filter: 'All'
@@ -25,7 +26,7 @@ const initialState: InitialState = {
 
 
 // better approach
-type DraftTask = Pick<ITask, "title" | "description" | "dueDate" | "priority">;
+type DraftTask = Pick<ITask, "title" | "description" | "dueDate" | "priority" | "assign-to">;
 type DraftTaskForUpdate = Pick<ITask, "id" | "title" | "description" | "dueDate" | "priority">;
 
 const createTask = (taskData: DraftTask): ITask => {

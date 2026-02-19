@@ -30,9 +30,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 import { Calendar } from "./calendar"
 import React from "react"
-import { useAppDispatch } from "@/redux/hook"
+import { useAppDispatch, useAppSelector } from "@/redux/hook"
 import { addTask } from "@/redux/features/task/taskSlice"
 import type { ITask } from "@/type"
+import { selectUsers } from "@/redux/features/user/userSlice"
 
 // const formSchema = z.object({
 //             title: z
@@ -54,6 +55,7 @@ import type { ITask } from "@/type"
 export function TaskForm() {
 
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUsers);
 
   const form = useForm(
     {
@@ -62,6 +64,7 @@ export function TaskForm() {
         description: "",
         dueDate: undefined,
         priority: "",
+        'assign-to': null,
       },
     }
   )
@@ -175,6 +178,42 @@ export function TaskForm() {
                       <SelectItem value="Low">Low</SelectItem>
                       <SelectItem value="Medium">Medium</SelectItem>
                       <SelectItem value="High">High</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Field>
+              )}
+            />
+
+
+            <Controller
+              name="assign-to"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field orientation="responsive" data-invalid={fieldState.invalid}>
+                  <FieldContent>
+                    <FieldLabel htmlFor="form-rhf-select-user">
+                      Assign To
+                    </FieldLabel>
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </FieldContent>
+                  <Select
+                    name={field.name}
+                    // value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      id="form-rhf-select-user"
+                      aria-invalid={fieldState.invalid}
+                      className="min-w-30"
+                    >
+                      <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                    <SelectContent position="item-aligned">
+                      {
+                        user.map(u => (
+                          <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
+                        ))
+                      }
                     </SelectContent>
                   </Select>
                 </Field>
