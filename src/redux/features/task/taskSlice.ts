@@ -1,6 +1,7 @@
 import type { RootState } from "@/redux/store";
 import type { ITask } from "@/type";
 import { createSlice, nanoid, type PayloadAction } from "@reduxjs/toolkit";
+import { deleteUser } from "../user/userSlice";
 // import { v4 as uuidv4 } from 'uuid'; //--> for uniq ID
 
 
@@ -70,7 +71,12 @@ const taskSlice = createSlice({
         updateFilter: (state, action: PayloadAction<"All" | "Low" | "Medium" | "High">) => {
             state.filter = action.payload;
         }
-    }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(deleteUser, (state, action) => {
+            state.tasks.forEach(t => t["assign-to"] === action.payload ? t["assign-to"] = null : t)
+        });
+    },
 })
 
 
